@@ -22,19 +22,21 @@ public class BootStrap implements Watcher {
     }
 
     public void bootstrap() {
-        createParent("/workers", new byte[0]);
-        createParent("/status", new byte[0]);
+        createParent("/workers", "worker-name".getBytes());
+        createParent("/status", "status-name".getBytes());
         createParent("/tasks", new byte[0]);
         createParent("/assign", new byte[0]);
     }
 
     void createParent(String path, byte[] data) {
-        zk.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT, createParentCallback, data);
+        zk.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, createParentCallback, data);
     }
 
     AsyncCallback.StringCallback createParentCallback = new AsyncCallback.StringCallback() {
         @Override
         public void processResult(int rc, String path, Object ctx, String name) {
+            System.out.print("path: " + name + " ");
+            System.out.println("name: " + name);
             switch (KeeperException.Code.get(rc)) {
                 case CONNECTIONLOSS:
                     createParent(path, (byte[]) ctx);
