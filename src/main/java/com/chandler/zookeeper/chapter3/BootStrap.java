@@ -29,7 +29,7 @@ public class BootStrap implements Watcher {
     }
 
     void createParent(String path, byte[] data) {
-        zk.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT, createParentCallback, data);
+        zk.create(path, data, ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL, createParentCallback, data);
     }
 
     AsyncCallback.StringCallback createParentCallback = new AsyncCallback.StringCallback() {
